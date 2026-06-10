@@ -1,0 +1,30 @@
+@import "tokens/colors.css";
+@import "tokens/state.css";
+@import "tokens/workspace.css";
+@import "tokens/widget.css";
+@import "tokens/batt-clock.css";
+@import "tokens/slider.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  min-height: 0px;
+  border: none;
+  border-radius: 0;
+  font-family: "Inter", "JetBrainsMono Nerd Font";
+  font-size: 14px;
+}
+
+window#waybar {
+  background: transparent;
+/* Smooth slide animation */
+    transition-property: margin-top, opacity, background-color;
+    transition-duration: 280ms;          /* ← Increase for slower/smoother feel */
+    transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);  /* nice ease-out */
+}
+
+/* When hidden (Waybar moves it off-screen) */
+window#waybar.hidden {
+    margin-top: -50px;       /* Should be a bit more than your bar height (42px) */
+    opacity: 0.0;
+}
