@@ -1,0 +1,31 @@
+* {
+    background-image: none;
+    transition: 200ms;
+}
+
+window {
+    background-color: rgba(0, 0, 0, 0.5); /* Dim the whole screen */
+}
+
+button {
+    color: #FFFFFF;
+    background-color: rgba(15, 15, 15, 0.85); /* Very dark obsidian glass */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 25px;
+    background-size: 45%;
+}
+
+button:hover {
+    background-color: rgba(137, 180, 250, 0.4); /* Light blue highlight */
+    border: 1px solid #89b4fa;
+}
+
+/* Default system icon paths */
+#logout { background-image: url("/usr/share/wlogout/icons/logout.png"); }
+#suspend { background-image: url("/usr/share/wlogout/icons/suspend.png"); }
+#hibernate { background-image: url("/usr/share/wlogout/icons/hibernate.png"); }
+#shutdown { background-image: url("/usr/share/wlogout/icons/shutdown.png"); }
+#reboot { background-image: url("/usr/share/wlogout/icons/reboot.png"); }
