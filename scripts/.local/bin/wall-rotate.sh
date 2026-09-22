@@ -1,8 +1,11 @@
 #!/bin/bash
 # === Minimal wallpaper rotator for Hyprland exec-once ===
 
-DIR="$HOME/Pictures/Wallpapers"
-INTERVAL=1800
+# Configurable via environment or defaults
+WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Pictures/Wallpapers}"
+INTERVAL="${WALLPAPER_INTERVAL:-1800}"
+MATUGEN_CONFIG="${MATUGEN_CONFIG:-$HOME/.config/matugen/config.toml}"
+MATUGEN_THEMES_DIR="${MATUGEN_THEMES_DIR:-$HOME/.local/share/matugen/themes}"
 
 # Start daemon if needed
 if ! pgrep -x "awww-daemon" >/dev/null; then
@@ -17,7 +20,7 @@ done
 
 while true; do
     # Shuffle wallpapers
-    mapfile -t wallpapers < <(find "$DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) -print0 2>/dev/null | shuf -z | xargs -0 -n1)
+    mapfile -t wallpapers < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.webp" \) -print0 2>/dev/null | shuf -z | xargs -0 -n1)
 
     [ ${#wallpapers[@]} -eq 0 ] && { sleep 30; continue; }
 
@@ -30,8 +33,17 @@ while true; do
             --transition-step 60 \
             --transition-duration 1.5 >/dev/null 2>&1
 
-        # Update colors
+        # Update colors: pywal for terminal (pushes sequences to running terms),
+        # matugen for waybar
         wal -i "$WALLPAPER" -n -q >/dev/null 2>&1
+        
+        # Generate resolved matugen config
+        MATUGEN_CONFIG_RESOLVED=$(mktemp)
+        sed -e "s|{{MATUGEN_THEMES_DIR}}|$MATUGEN_THEMES_DIR|g" \
+            -e "s|{{MATUGEN_OUTPUT_DIR}}|$HOME/.config|g" \
+            "$MATUGEN_CONFIG" > "$MATUGEN_CONFIG_RESOLVED"
+        matugen image "$WALLPAPER" --prefer darkness -c "$MATUGEN_CONFIG_RESOLVED" -q >/dev/null 2>&1
+        rm -f "$MATUGEN_CONFIG_RESOLVED"
 
         sleep "$INTERVAL"
     done
